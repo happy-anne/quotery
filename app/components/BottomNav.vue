@@ -3,8 +3,8 @@ const route = useRoute()
 
 const items = [
   { label: '홈', icon: 'lucide:home', to: '/home' },
+  { label: '즐겨찾기', icon: 'lucide:star', to: '/favorites' },
   { label: '검색', icon: 'lucide:search', to: '/search' },
-  { label: '즐겨찾기', icon: 'lucide:heart', to: '/favorites' },
   { label: '설정', icon: 'lucide:settings', to: '/settings' },
 ]
 
@@ -14,12 +14,12 @@ function isActive(to: string) {
 </script>
 
 <template>
-  <nav class="fixed bottom-0 inset-x-0 z-40 safe-bottom" style="max-width: 430px; margin: 0 auto;">
+  <nav class="fixed bottom-0 inset-x-0 z-40 safe-bottom">
     <div
-      class="bg-canvas/95 backdrop-blur-sm border-t border-border"
-      style="border-color: var(--border);"
+      class="app-bar-bg backdrop-blur-sm border-t"
+      style="border-color: var(--border-subtle);"
     >
-      <div class="flex items-center justify-around px-2 pt-2 pb-1">
+      <div class="app-bar-inner flex items-center justify-around px-2 pt-2 pb-[14px]">
         <NuxtLink
           v-for="item in items"
           :key="item.to"

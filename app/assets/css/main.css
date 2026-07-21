@@ -2,6 +2,88 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Pretendard (self-hosted from app/assets/fonts) ── */
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-Thin.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-Thin.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-ExtraLight.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-ExtraLight.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-Light.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-Regular.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-Medium.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-Medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-SemiBold.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-Bold.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-ExtraBold.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-ExtraBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/woff2/Pretendard-Black.woff2') format('woff2'),
+       url('../fonts/woff/Pretendard-Black.woff') format('woff');
+}
+
 /* ── Design Tokens (ElevenLabs-inspired warm reading aesthetic) ── */
 :root {
   /* Colors */
@@ -9,6 +91,7 @@
   --surface: #f5f5f5;
   --stone: #f5f2ef;
   --stone-80: rgba(245, 242, 239, 0.8);
+  --stone-95: rgba(245, 242, 239, 0.95);
   --black: #000000;
   --secondary: #4e4e4e;
   --muted: #777169;
@@ -29,8 +112,13 @@
   --radius-lg: 24px;
   --radius-pill: 9999px;
 
+  /* Layout */
+  --content-max: 700px;
+  --page-gutter: 20px;
+  --nav-height: 82px;
+
   /* Typography */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Pretendard', system-ui, -apple-system, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, monospace;
 }
 
@@ -48,7 +136,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0.16px;
   color: var(--black);
-  background-color: var(--canvas);
+  background-color: var(--stone);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
@@ -150,7 +238,6 @@ body {
   padding: 12px 20px 12px 16px;
   font-size: 0.9375rem;
   font-weight: 500;
-  box-shadow: var(--shadow-warm);
 }
 
 .btn-stone:hover:not(:disabled) {
@@ -164,7 +251,10 @@ body {
   padding: 12px 20px;
   font-size: 0.9375rem;
   font-weight: 500;
-  box-shadow: var(--shadow-card);
+}
+
+.btn-white:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .btn-ghost {
@@ -176,8 +266,21 @@ body {
   font-weight: 500;
 }
 
-.btn-ghost:hover {
-  background: var(--surface);
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Unselected pill (category chips, filters) — a tinted fill instead of a border. */
+.btn-chip {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--secondary);
+  border: none;
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+}
+
+.btn-chip:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 /* ── Cards ── */
@@ -196,25 +299,33 @@ body {
 .input {
   width: 100%;
   background: var(--canvas);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-md);
-  padding: 12px 16px;
+  padding: 14px 16px;
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.16px;
   color: var(--black);
   outline: none;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  box-shadow: rgba(0, 0, 0, 0.075) 0px 0px 0px 0.5px;
+  transition: box-shadow 150ms ease;
   -webkit-appearance: none;
 }
 
 .input::placeholder {
   color: var(--muted);
+  font-weight: 400;
 }
 
 .input:focus {
-  border-color: var(--black);
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 0px 1px, rgba(0, 0, 0, 0.08) 0px 0px 0px 3px;
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .textarea {
@@ -222,13 +333,99 @@ body {
   min-height: 120px;
 }
 
+/* An input with a leading icon (e.g. search). Declared after .input so its
+   padding/radius reliably win — Tailwind utility classes of equal specificity
+   lose to .input's shorthand `padding` by source order, since @tailwind
+   utilities is injected above .input in this same file. */
+.input-icon {
+  padding: 10px 16px 10px 44px;
+  border-radius: var(--radius-md);
+}
+
 /* ── Layout ── */
 .page-container {
-  max-width: 430px;
+  max-width: var(--content-max);
   margin: 0 auto;
   min-height: 100dvh;
   position: relative;
+  background: var(--stone);
+}
+
+/* Header / bottom nav break out of the content column and span the full
+   browser width, while their inner content stays aligned with the column. */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  margin-inline: calc(50% - 50vw);
+  background: var(--stone-95);
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Bottom nav shares the header's translucent page tint. */
+.app-bar-bg {
+  background: var(--stone-95);
+}
+
+.app-bar-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+/* Floating action button, pinned to the content column's right edge. */
+.fab {
+  position: fixed;
+  z-index: 40;
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 16px);
+  right: max(var(--page-gutter), calc(50vw - var(--content-max) / 2 + var(--page-gutter)));
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
+  border-radius: var(--radius-pill);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 8px 16px;
+}
+
+/* ── Sheets / dialogs ──
+   Under 768px they stay bottom-anchored sheets spanning the full width; from
+   768px up they become centered dialogs. */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.sheet-panel {
+  position: relative;
+  width: 100%;
   background: var(--canvas);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 24px 24px calc(40px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .sheet {
+    align-items: center;
+    padding: 24px;
+  }
+
+  .sheet-panel {
+    max-width: 420px;
+    border-radius: var(--radius-lg);
+    padding: 28px 28px 28px;
+  }
 }
 
 .safe-top {
@@ -237,6 +434,13 @@ body {
 
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ── Icons ── */
+/* Lucide paths carry fill="none", so an "on" state (e.g. a favorited star)
+   has to fill them explicitly. Requires <Icon mode="svg">. */
+.icon-filled path {
+  fill: currentColor;
 }
 
 /* ── Scrollbar ── */

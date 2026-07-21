@@ -5,7 +5,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="flex flex-col min-h-dvh px-8 py-16 bg-stone">
+  <div class="flex flex-col min-h-dvh px-8 py-16">
     <!-- Logo area -->
     <div class="flex-1 flex flex-col justify-center">
       <div class="mb-16">

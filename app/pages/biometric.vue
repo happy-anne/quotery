@@ -16,7 +16,7 @@ function skip() {
 <template>
   <div class="flex flex-col min-h-dvh px-8 py-16">
     <div class="flex-1 flex flex-col items-center justify-center text-center gap-6">
-      <div class="w-20 h-20 rounded-3xl bg-stone flex items-center justify-center shadow-warm mb-4">
+      <div class="w-20 h-20 rounded-3xl bg-canvas flex items-center justify-center mb-4">
         <Icon name="lucide:fingerprint" size="36" />
       </div>
       <h2 class="text-display text-black">생체 인증</h2>

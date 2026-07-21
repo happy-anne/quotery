@@ -28,14 +28,21 @@ function checkComplete() {
   }
 }
 
-function setError(msg: string) {
-  error.value = msg
+function reset() {
   digits.value = ['', '', '', '']
   nextTick(() => refs.value[0]?.focus())
+}
+
+function setError(msg: string) {
+  error.value = msg
+  reset()
   setTimeout(() => { error.value = '' }, 2000)
 }
 
-defineExpose({ setError })
+// Land the caret in the first box so the keypad opens without a tap.
+onMounted(() => refs.value[0]?.focus())
+
+defineExpose({ setError, reset, focus: () => refs.value[0]?.focus() })
 </script>
 
 <template>
@@ -49,16 +56,17 @@ defineExpose({ setError })
         type="tel"
         inputmode="numeric"
         maxlength="1"
+        :autofocus="i === 0"
         :class="[
           'w-14 h-14 text-center text-xl font-medium rounded-2xl border-2 transition-all outline-none',
-          digits[i] ? 'border-black bg-stone' : 'border-border bg-canvas',
+          digits[i] ? 'border-black bg-canvas' : 'border-border bg-canvas',
           'focus:border-black',
         ]"
         @input="onInput(i, $event)"
         @keydown="onKeydown(i, $event)"
       >
     </div>
-    <Transition name="fade">
+    <Transition name="fade" :duration="250">
       <p v-if="error" class="text-caption text-red-500">{{ error }}</p>
     </Transition>
   </div>

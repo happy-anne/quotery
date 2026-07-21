@@ -10,6 +10,7 @@ export interface Category {
   user_id: string
   name: string
   color: string
+  sort_order?: number | null
   created_at: string
 }
 
@@ -41,7 +42,7 @@ export interface QuoteForm {
   favorite: boolean
 }
 
-export type SortOption = 'newest' | 'oldest' | 'title' | 'source'
+export type SortOption = 'newest' | 'oldest' | 'edited'
 
 export interface QuoteFilter {
   category_id?: string

@@ -19,18 +19,20 @@ onUnmounted(() => {
 
 <template>
   <div class="page-container">
-    <!-- Header -->
-    <header class="sticky top-0 z-30 bg-canvas/95 backdrop-blur-sm border-b px-5 py-4" style="border-color: var(--border-subtle);">
-      <div class="flex items-center gap-3">
-        <button class="btn btn-ghost p-2 rounded-xl -ml-2 flex-shrink-0" @click="$router.back()">
-          <Icon name="lucide:arrow-left" size="20" />
-        </button>
+    <header class="app-header">
+      <div class="app-bar-inner px-5 py-4">
+        <h1 class="text-section text-black" style="font-weight: 300;">검색</h1>
+      </div>
+    </header>
+
+    <main class="px-5 py-5 pb-8">
+      <div class="flex items-center gap-3 mb-5">
         <div class="relative flex-1">
-          <Icon name="lucide:search" size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+          <Icon name="lucide:search" size="16" class="absolute left-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none" />
           <input
             ref="inputRef"
             v-model="query"
-            class="input pl-9 py-2.5 rounded-xl"
+            class="input input-icon"
             placeholder="글귀, 제목, 출처 검색..."
           >
         </div>
@@ -38,9 +40,7 @@ onUnmounted(() => {
           지우기
         </button>
       </div>
-    </header>
 
-    <main class="px-5 py-5 pb-8">
       <!-- Hint -->
       <div v-if="!query" class="text-center py-16">
         <Icon name="lucide:search" size="32" class="text-muted mx-auto mb-4" />

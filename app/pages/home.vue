@@ -5,14 +5,16 @@ const quotesStore = useQuotesStore()
 const categoriesStore = useCategoriesStore()
 
 const showSortMenu = ref(false)
+const sortMenuRef = ref<HTMLElement | null>(null)
 const selectedCategoryId = ref<string | undefined>()
 
 const sortLabels: Record<SortOption, string> = {
   newest: '최신순',
   oldest: '오래된순',
-  title: '제목순',
-  source: '출처순',
+  edited: '최종 편집일순',
 }
+
+onClickOutside(sortMenuRef, () => { showSortMenu.value = false })
 
 onMounted(async () => {
   await Promise.all([
@@ -39,13 +41,10 @@ function onFavorite(id: string) {
 <template>
   <div class="page-container">
     <!-- Header -->
-    <header class="sticky top-0 z-30 bg-canvas/95 backdrop-blur-sm border-b" style="border-color: var(--border-subtle);">
-      <div class="px-5 pt-4 pb-3">
+    <header class="app-header">
+      <div class="app-bar-inner px-5 pt-4 pb-3">
         <div class="flex items-center justify-between mb-4">
           <AppLogo />
-          <NuxtLink to="/search" class="btn btn-ghost p-2 rounded-xl">
-            <Icon name="lucide:search" size="20" />
-          </NuxtLink>
         </div>
 
         <!-- Category filter -->
@@ -53,7 +52,7 @@ function onFavorite(id: string) {
           <button
             :class="[
               'btn text-nav px-4 py-1.5 flex-shrink-0',
-              !selectedCategoryId ? 'btn-primary' : 'btn-ghost border border-border',
+              !selectedCategoryId ? 'btn-primary' : 'btn-chip',
             ]"
             style="border-radius: 9999px; padding: 6px 14px;"
             @click="setCategory(undefined)"
@@ -65,7 +64,7 @@ function onFavorite(id: string) {
             :key="cat.id"
             :class="[
               'btn text-nav flex-shrink-0',
-              selectedCategoryId === cat.id ? 'btn-primary' : 'btn-ghost border border-border',
+              selectedCategoryId === cat.id ? 'btn-primary' : 'btn-chip',
             ]"
             style="border-radius: 9999px; padding: 6px 14px;"
             @click="setCategory(cat.id)"
@@ -81,13 +80,13 @@ function onFavorite(id: string) {
       <p class="text-caption text-muted">
         {{ quotesStore.filteredQuotes.length }}개의 문장
       </p>
-      <div class="relative">
+      <div ref="sortMenuRef" class="relative">
         <button class="btn btn-ghost text-caption px-3 py-1.5 gap-1" @click="showSortMenu = !showSortMenu">
           {{ sortLabels[quotesStore.filter.sort] }}
           <Icon name="lucide:chevron-down" size="14" />
         </button>
-        <Transition name="fade">
-          <div v-if="showSortMenu" class="absolute right-0 top-full mt-1 card py-1 z-20 w-32">
+        <Transition name="fade" :duration="250">
+          <div v-if="showSortMenu" class="absolute right-0 top-full mt-1 card py-1 z-20 w-40">
             <button
               v-for="(label, key) in sortLabels"
               :key="key"
@@ -113,12 +112,12 @@ function onFavorite(id: string) {
 
       <!-- Empty state -->
       <div v-else-if="quotesStore.filteredQuotes.length === 0" class="flex flex-col items-center justify-center py-24 text-center gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-stone flex items-center justify-center mb-2">
+        <div class="w-16 h-16 rounded-2xl bg-canvas flex items-center justify-center mb-2">
           <Icon name="lucide:quote" size="28" class="text-muted" />
         </div>
         <p class="text-section text-black" style="font-weight: 300;">아직 저장된 문장이<br>없어요</p>
         <p class="text-ui text-secondary">마음에 남은 문장을 저장해보세요.</p>
-        <NuxtLink to="/quotes/new" class="btn btn-stone mt-4">
+        <NuxtLink to="/quotes/new" class="btn btn-white mt-4">
           <Icon name="lucide:plus" size="16" />
           첫 문장 저장하기
         </NuxtLink>
@@ -136,11 +135,7 @@ function onFavorite(id: string) {
     </main>
 
     <!-- FAB -->
-    <NuxtLink
-      to="/quotes/new"
-      class="fixed z-40 flex items-center justify-center"
-      style="bottom: calc(72px + env(safe-area-inset-bottom) + 16px); right: max(16px, calc(50vw - 215px + 16px)); width: 52px; height: 52px; background: #000; border-radius: 9999px; box-shadow: rgba(0,0,0,0.4) 0px 0px 1px, rgba(0,0,0,0.1) 0px 8px 16px;"
-    >
+    <NuxtLink to="/quotes/new" class="fab">
       <Icon name="lucide:plus" size="22" class="text-white" />
     </NuxtLink>
 

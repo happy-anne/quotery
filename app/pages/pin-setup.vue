@@ -11,7 +11,7 @@ function onPinComplete(pin: string) {
   if (step.value === 'set') {
     firstPin.value = pin
     step.value = 'confirm'
-    nextTick(() => pinInputRef.value?.setError(''))
+    nextTick(() => pinInputRef.value?.reset())
   } else {
     if (pin === firstPin.value) {
       authStore.storePin(pin)
@@ -31,7 +31,7 @@ function onPinComplete(pin: string) {
       <AppLogo />
     </div>
 
-    <Transition name="fade" mode="out-in">
+    <Transition name="fade" mode="out-in" :duration="250">
       <div :key="step">
         <h2 class="text-display text-black mb-2">
           {{ step === 'set' ? 'PIN 번호 설정' : 'PIN 확인' }}

@@ -10,8 +10,10 @@ onMounted(() => {
 
 <template>
   <div class="page-container">
-    <header class="sticky top-0 z-30 bg-canvas/95 backdrop-blur-sm border-b px-5 py-4" style="border-color: var(--border-subtle);">
-      <h1 class="text-section text-black" style="font-weight: 300;">즐겨찾기</h1>
+    <header class="app-header">
+      <div class="app-bar-inner px-5 py-4">
+        <h1 class="text-section text-black" style="font-weight: 300;">즐겨찾기</h1>
+      </div>
     </header>
 
     <main class="px-5 py-5 pb-28">
@@ -20,8 +22,8 @@ onMounted(() => {
       </div>
 
       <div v-else-if="favorites.length === 0" class="flex flex-col items-center justify-center py-24 text-center gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-stone flex items-center justify-center mb-2">
-          <Icon name="lucide:heart" size="28" class="text-muted" />
+        <div class="w-16 h-16 rounded-2xl bg-canvas flex items-center justify-center mb-2">
+          <Icon name="lucide:star" size="28" class="text-muted" />
         </div>
         <p class="text-section text-black" style="font-weight: 300;">즐겨찾기가 없어요</p>
         <p class="text-ui text-secondary">마음에 드는 문장을 즐겨찾기에 추가하면<br>여기서 모아볼 수 있어요.</p>

@@ -4,53 +4,56 @@ import type { Quote } from '~/types'
 const props = defineProps<{ quote: Quote }>()
 const emit = defineEmits<{ favorite: [id: string] }>()
 
-const dateStr = computed(() => {
-  return new Date(props.quote.created_at).toLocaleDateString('ko-KR', {
-    year: 'numeric', month: 'short', day: 'numeric',
-  })
-})
+const dateStr = computed(() => formatDateTime(props.quote.created_at))
 
 const excerpt = computed(() => {
   const c = props.quote.content
   return c.length > 160 ? c.slice(0, 160) + '…' : c
+})
+
+// Title, author, source and page collapse into one supporting line.
+const details = computed(() => {
+  const parts = [props.quote.title, props.quote.author, props.quote.source].filter(Boolean)
+  if (props.quote.page) parts.push(`p.${props.quote.page}`)
+  return parts.join(' · ')
 })
 </script>
 
 <template>
   <NuxtLink :to="`/quotes/${quote.id}`" class="block">
     <article class="card p-5 active:scale-[0.99] transition-transform duration-150">
-      <!-- Category + Date -->
-      <div class="flex items-center justify-between mb-3">
+      <!-- Row 1: quote + supporting text, thumbnail on the right -->
+      <div class="flex gap-4">
+        <div class="flex-1 min-w-0">
+          <blockquote class="text-body text-black leading-relaxed">
+            "{{ excerpt }}"
+          </blockquote>
+          <p v-if="details" class="text-caption text-muted mt-2 truncate">
+            {{ details }}
+          </p>
+        </div>
+        <img
+          v-if="quote.image_url"
+          :src="quote.image_url"
+          :alt="quote.title || ''"
+          class="quote-thumb"
+          loading="lazy"
+        >
+      </div>
+
+      <!-- Row 2: category + date, favorite pinned right -->
+      <div class="flex items-center gap-2 mt-4">
         <CategoryBadge :category="quote.category" />
         <span class="text-caption text-muted">{{ dateStr }}</span>
-      </div>
-
-      <!-- Content -->
-      <blockquote class="text-body text-black mb-3 leading-relaxed">
-        "{{ excerpt }}"
-      </blockquote>
-
-      <!-- Source / Author -->
-      <div v-if="quote.source || quote.author" class="text-caption text-muted mb-3">
-        <span v-if="quote.author">{{ quote.author }}</span>
-        <span v-if="quote.author && quote.source"> · </span>
-        <span v-if="quote.source">{{ quote.source }}</span>
-        <span v-if="quote.page"> p.{{ quote.page }}</span>
-      </div>
-
-      <!-- Title + Favorite -->
-      <div class="flex items-center justify-between">
-        <p v-if="quote.title" class="text-caption font-medium text-secondary truncate pr-4">
-          {{ quote.title }}
-        </p>
-        <div v-else class="flex-1" />
         <button
           class="ml-auto text-muted hover:text-black transition-colors"
+          :aria-label="quote.favorite ? '즐겨찾기 해제' : '즐겨찾기에 추가'"
           @click.prevent="emit('favorite', quote.id)"
         >
           <Icon
-            :name="quote.favorite ? 'lucide:heart' : 'lucide:heart'"
-            :class="quote.favorite ? 'text-black' : 'text-muted'"
+            name="lucide:star"
+            mode="svg"
+            :class="quote.favorite ? 'text-black icon-filled' : 'text-muted'"
             size="16"
           />
         </button>
@@ -58,3 +61,14 @@ const excerpt = computed(() => {
     </article>
   </NuxtLink>
 </template>
+
+<style scoped>
+.quote-thumb {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--stone);
+}
+</style>

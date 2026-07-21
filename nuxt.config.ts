@@ -9,15 +9,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vueuse/nuxt',
     '@nuxt/icon',
-    '@nuxtjs/google-fonts',
   ],
-
-  googleFonts: {
-    families: {
-      Inter: [300, 400, 500, 600, 700],
-    },
-    display: 'swap',
-  },
 
   css: ['~/assets/css/main.css'],
 

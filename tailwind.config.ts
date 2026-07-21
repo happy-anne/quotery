@@ -16,7 +16,7 @@ export default {
         border: '#e5e5e5',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Pretendard', 'system-ui', '-apple-system', 'sans-serif'],
       },
       borderRadius: {
         pill: '9999px',

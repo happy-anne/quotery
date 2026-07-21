@@ -4,8 +4,12 @@ create table if not exists categories (
   user_id uuid references auth.users(id) on delete cascade not null,
   name text not null,
   color text not null default '#e8d5c4',
+  sort_order integer,
   created_at timestamptz default now() not null
 );
+
+-- For databases created before sort_order existed:
+alter table categories add column if not exists sort_order integer;
 
 alter table categories enable row level security;
 create policy "Users manage own categories" on categories
@@ -41,3 +45,9 @@ create policy "Users upload own images" on storage.objects
 
 create policy "Public read images" on storage.objects
   for select using (bucket_id = 'quote-images');
+
+-- Lets account deletion actually remove a user's uploaded photos. Supabase
+-- Storage stamps `owner` on upload, so this is scoped to the uploader.
+drop policy if exists "Users delete own images" on storage.objects;
+create policy "Users delete own images" on storage.objects
+  for delete using (bucket_id = 'quote-images' and owner = auth.uid());
