@@ -118,22 +118,7 @@ async function submit() {
       <!-- Category -->
       <div class="mb-5">
         <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
-        <div class="flex flex-wrap gap-2">
-          <button
-            v-for="cat in categoriesStore.categories"
-            :key="cat.id"
-            :class="['btn text-caption px-3 py-1.5', form.category_id === cat.id ? 'btn-chip-selected' : 'btn-chip']"
-            style="border-radius: 9999px;"
-            @click="form.category_id = form.category_id === cat.id ? '' : cat.id"
-          >
-            {{ cat.name }}
-          </button>
-          <!-- No "add category" link here on purpose: leaving this screen would
-               abandon whatever is being written. -->
-          <p v-if="!categoriesStore.categories.length" class="text-caption text-muted">
-            설정 &gt; 카테고리 관리에서 추가할 수 있어요.
-          </p>
-        </div>
+        <CategoryPicker v-model="form.category_id" />
       </div>
 
       <!-- Extra details, always visible -->

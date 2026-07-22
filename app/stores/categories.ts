@@ -20,15 +20,23 @@ export const useCategoriesStore = defineStore('categories', () => {
     loading.value = false
   }
 
-  async function createCategory(name: string, color?: string) {
+  // Returns null on failure so callers can surface it — the inline picker on the
+  // write screen needs to tell the user rather than silently doing nothing.
+  async function createCategory(name: string, color?: string): Promise<Category | null> {
     const usedColors = categories.value.map(c => c.color)
     const nextColor = color || DEFAULT_COLORS.find(c => !usedColors.includes(c)) || DEFAULT_COLORS[0]
     const { data: { user } } = await $supabase.auth.getUser()
-    const { data } = await $supabase
+    const { data, error } = await $supabase
       .from('categories')
       .insert({ name, color: nextColor, user_id: user?.id })
       .select()
       .single()
+
+    if (error) {
+      console.error('Failed to create category:', error)
+      return null
+    }
+
     if (data) categories.value.push(data)
     return data
   }

@@ -106,17 +106,7 @@ async function submit() {
 
       <div class="mb-5">
         <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
-        <div class="flex flex-wrap gap-2">
-          <button
-            v-for="cat in categoriesStore.categories"
-            :key="cat.id"
-            :class="['btn text-caption px-3 py-1.5', form.category_id === cat.id ? 'btn-chip-selected' : 'btn-chip']"
-            style="border-radius: 9999px;"
-            @click="form.category_id = form.category_id === cat.id ? '' : cat.id"
-          >
-            {{ cat.name }}
-          </button>
-        </div>
+        <CategoryPicker v-model="form.category_id" />
       </div>
 
       <!-- Extra details -->
