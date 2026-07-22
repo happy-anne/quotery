@@ -128,10 +128,11 @@ async function submit() {
           >
             {{ cat.name }}
           </button>
-          <NuxtLink to="/categories" class="btn btn-chip text-caption px-3 py-1.5">
-            <Icon name="lucide:plus" size="12" />
-            추가
-          </NuxtLink>
+          <!-- No "add category" link here on purpose: leaving this screen would
+               abandon whatever is being written. -->
+          <p v-if="!categoriesStore.categories.length" class="text-caption text-muted">
+            설정 &gt; 카테고리 관리에서 추가할 수 있어요.
+          </p>
         </div>
       </div>
 
