@@ -3,11 +3,14 @@ definePageMeta({ layout: 'auth' })
 
 const { $supabase } = useNuxtApp()
 const router = useRouter()
+const route = useRoute()
 const loading = ref<string | null>(null)
 const errorMsg = ref('')
 const infoMsg = ref('')
 
-const mode = ref<'login' | 'signup'>('login')
+// The welcome screen links here with ?mode=signup so "시작하기" lands directly
+// on the signup form instead of making new users toggle after arriving.
+const mode = ref<'login' | 'signup'>(route.query.mode === 'signup' ? 'signup' : 'login')
 const email = ref('')
 const password = ref('')
 
@@ -15,6 +18,8 @@ function toggleMode() {
   mode.value = mode.value === 'login' ? 'signup' : 'login'
   errorMsg.value = ''
   infoMsg.value = ''
+  // Keep the URL in step so refresh and back/forward preserve the form.
+  router.replace(mode.value === 'signup' ? { query: { mode: 'signup' } } : { query: {} })
 }
 
 async function submitEmailAuth() {
@@ -40,6 +45,7 @@ async function submitEmailAuth() {
     } else {
       infoMsg.value = '확인 이메일을 보냈어요. 메일함을 확인한 뒤 로그인해주세요.'
       mode.value = 'login'
+      router.replace({ query: {} })
     }
     return
   }

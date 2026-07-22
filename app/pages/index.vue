@@ -22,7 +22,7 @@ const router = useRouter()
 
     <!-- Auth buttons -->
     <div class="flex flex-col gap-3 pb-8">
-      <NuxtLink to="/login" class="btn btn-primary w-full text-center justify-center text-nav">
+      <NuxtLink to="/login?mode=signup" class="btn btn-primary w-full text-center justify-center text-nav">
         시작하기
       </NuxtLink>
       <p class="text-center text-caption text-muted">
