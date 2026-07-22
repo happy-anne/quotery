@@ -103,13 +103,13 @@ async function submit() {
       <p v-if="errorMsg" class="text-caption text-red-500 mb-4">{{ errorMsg }}</p>
 
       <!-- Category -->
-      <div class="mb-5">
+      <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
         <CategoryPicker v-model="form.category_id" />
       </div>
 
       <!-- Content -->
-      <div class="mb-5">
+      <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">
           문장 <span class="text-black">*</span>
         </label>
@@ -124,7 +124,7 @@ async function submit() {
       </div>
 
       <!-- Photo — extracts text into 문장 automatically when it is still empty -->
-      <div class="mb-5">
+      <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">사진</label>
         <div v-if="imagePreview" class="relative rounded-[8px] overflow-hidden mb-3">
           <img :src="imagePreview" alt="선택한 사진" class="w-full object-cover max-h-64">
@@ -154,12 +154,12 @@ async function submit() {
       </div>
 
       <!-- Extra details, always visible -->
-      <div class="flex flex-col gap-4 pt-5 mt-1 border-t" style="border-color: var(--border-subtle);">
-        <div>
+      <div class="pt-5 mt-1 border-t" style="border-color: var(--border-subtle);">
+        <div class="mb-6">
           <label class="block text-caption font-medium text-secondary mb-2">출처</label>
           <input v-model="form.source" class="input" placeholder="예: 어린 왕자">
         </div>
-        <div class="flex gap-3">
+        <div class="flex gap-3 mb-6">
           <div class="flex-1">
             <label class="block text-caption font-medium text-secondary mb-2">저자</label>
             <input v-model="form.author" class="input" placeholder="예: 생텍쥐페리">
@@ -177,7 +177,7 @@ async function submit() {
             >
           </div>
         </div>
-        <div>
+        <div class="mb-6">
           <label class="block text-caption font-medium text-secondary mb-2">메모</label>
           <textarea v-model="form.memo" class="input textarea" placeholder="이 문장에 대한 생각을 적어보세요." rows="3" />
         </div>

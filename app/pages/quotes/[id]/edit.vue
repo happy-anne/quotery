@@ -110,13 +110,13 @@ async function submit() {
     <div class="px-5 pb-12 pt-5">
       <p v-if="errorMsg" class="text-caption text-red-500 mb-4">{{ errorMsg }}</p>
 
-      <div class="mb-5">
+      <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">문장 *</label>
         <textarea v-model="form.content" class="input textarea text-body" rows="5" />
       </div>
 
       <!-- Photo -->
-      <div class="mb-5">
+      <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">사진</label>
         <div v-if="imagePreview" class="relative rounded-[8px] overflow-hidden mb-3">
           <img :src="imagePreview" alt="첨부된 사진" class="w-full object-cover max-h-64">
@@ -141,18 +141,18 @@ async function submit() {
         </div>
       </div>
 
-      <div class="mb-5">
+      <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
         <CategoryPicker v-model="form.category_id" />
       </div>
 
       <!-- Extra details -->
-      <div class="flex flex-col gap-4 pt-5 mt-1 border-t" style="border-color: var(--border-subtle);">
-        <div>
+      <div class="pt-5 mt-1 border-t" style="border-color: var(--border-subtle);">
+        <div class="mb-6">
           <label class="block text-caption font-medium text-secondary mb-2">출처</label>
           <input v-model="form.source" class="input" placeholder="예: 어린 왕자">
         </div>
-        <div class="flex gap-3">
+        <div class="flex gap-3 mb-6">
           <div class="flex-1">
             <label class="block text-caption font-medium text-secondary mb-2">저자</label>
             <input v-model="form.author" class="input" placeholder="예: 생텍쥐페리">
@@ -169,7 +169,7 @@ async function submit() {
             >
           </div>
         </div>
-        <div>
+        <div class="mb-6">
           <label class="block text-caption font-medium text-secondary mb-2">메모</label>
           <textarea v-model="form.memo" class="input textarea" rows="3" />
         </div>

@@ -94,14 +94,14 @@ async function share() {
       <CategoryBadge :category="quote.category" class="mb-6" />
 
       <!-- Quote content -->
-      <blockquote class="mb-8">
+      <blockquote class="mb-6">
         <p class="text-body-lg text-black leading-relaxed" style="font-size: 1.2rem; line-height: 1.7;">
           "{{ quote.content }}"
         </p>
       </blockquote>
 
       <!-- Image -->
-      <div v-if="quote.image_url" class="rounded-[8px] overflow-hidden mb-8">
+      <div v-if="quote.image_url" class="rounded-[8px] overflow-hidden mb-6">
         <img :src="quote.image_url" alt="" class="w-full object-cover">
       </div>
 

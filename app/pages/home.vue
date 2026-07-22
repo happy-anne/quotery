@@ -47,14 +47,12 @@ function onFavorite(id: string) {
           <AppLogo />
         </div>
 
-        <!-- Category filter -->
-        <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        <!-- Category filter — same chip style as the write screen's picker,
+             wrapped so every category stays visible instead of scrolling. -->
+        <div class="flex flex-wrap items-center gap-2">
           <button
-            :class="[
-              'btn text-nav px-4 py-1.5 flex-shrink-0',
-              !selectedCategoryId ? 'btn-primary' : 'btn-chip',
-            ]"
-            style="border-radius: 9999px; padding: 6px 14px;"
+            :class="['btn text-caption px-3 py-1.5', !selectedCategoryId ? 'btn-chip-selected' : 'btn-chip']"
+            style="border-radius: 9999px;"
             @click="setCategory(undefined)"
           >
             전체
@@ -62,11 +60,8 @@ function onFavorite(id: string) {
           <button
             v-for="cat in categoriesStore.categories"
             :key="cat.id"
-            :class="[
-              'btn text-nav flex-shrink-0',
-              selectedCategoryId === cat.id ? 'btn-primary' : 'btn-chip',
-            ]"
-            style="border-radius: 9999px; padding: 6px 14px;"
+            :class="['btn text-caption px-3 py-1.5', selectedCategoryId === cat.id ? 'btn-chip-selected' : 'btn-chip']"
+            style="border-radius: 9999px;"
             @click="setCategory(cat.id)"
           >
             {{ cat.name }}
