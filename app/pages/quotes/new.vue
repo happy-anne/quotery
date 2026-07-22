@@ -126,7 +126,7 @@ async function submit() {
       <!-- Photo — extracts text into 문장 automatically when it is still empty -->
       <div class="mb-5">
         <label class="block text-caption font-medium text-secondary mb-2">사진</label>
-        <div v-if="imagePreview" class="relative rounded-2xl overflow-hidden mb-3">
+        <div v-if="imagePreview" class="relative rounded-[8px] overflow-hidden mb-3">
           <img :src="imagePreview" alt="선택한 사진" class="w-full object-cover max-h-64">
           <button
             class="absolute top-2 right-2 w-8 h-8 bg-black/60 rounded-full flex items-center justify-center"

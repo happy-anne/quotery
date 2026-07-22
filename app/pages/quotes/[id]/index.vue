@@ -101,7 +101,7 @@ async function share() {
       </blockquote>
 
       <!-- Image -->
-      <div v-if="quote.image_url" class="rounded-2xl overflow-hidden mb-8">
+      <div v-if="quote.image_url" class="rounded-[8px] overflow-hidden mb-8">
         <img :src="quote.image_url" alt="" class="w-full object-cover">
       </div>
 

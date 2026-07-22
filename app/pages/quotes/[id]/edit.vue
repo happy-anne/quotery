@@ -20,6 +20,10 @@ const form = reactive({
 })
 const imageFile = ref<File | null>(null)
 const imagePreview = ref<string | null>(null)
+// True once the user removes the ORIGINAL photo without picking a
+// replacement — distinct from imageFile being empty, which just means
+// "nothing changed".
+const removePhoto = ref(false)
 const submitting = ref(false)
 const errorMsg = ref('')
 
@@ -43,13 +47,20 @@ function onImageChange(e: Event) {
   if (!file) return
   imageFile.value = file
   imagePreview.value = URL.createObjectURL(file)
+  removePhoto.value = false
+}
+
+function removeImage() {
+  imageFile.value = null
+  imagePreview.value = null
+  removePhoto.value = true
 }
 
 // Dirty means "differs from the quote as loaded", so simply opening the form
 // and leaving it alone does not prompt.
 const isDirty = computed(() => {
   if (!quote.value) return false
-  if (imageFile.value) return true
+  if (imageFile.value || removePhoto.value) return true
   return form.content !== quote.value.content
     || form.source !== (quote.value.source || '')
     || form.author !== (quote.value.author || '')
@@ -64,7 +75,7 @@ async function submit() {
   if (!form.content.trim() || !quote.value) return
   submitting.value = true
   errorMsg.value = ''
-  const updated = await quotesStore.updateQuote(quote.value.id, form, imageFile.value || undefined)
+  const updated = await quotesStore.updateQuote(quote.value.id, form, imageFile.value || undefined, removePhoto.value)
   submitting.value = false
   if (updated) {
     allowLeave()
@@ -107,8 +118,14 @@ async function submit() {
       <!-- Photo -->
       <div class="mb-5">
         <label class="block text-caption font-medium text-secondary mb-2">사진</label>
-        <div v-if="imagePreview" class="relative rounded-2xl overflow-hidden mb-3">
+        <div v-if="imagePreview" class="relative rounded-[8px] overflow-hidden mb-3">
           <img :src="imagePreview" alt="첨부된 사진" class="w-full object-cover max-h-64">
+          <button
+            class="absolute top-2 right-2 w-8 h-8 bg-black/60 rounded-full flex items-center justify-center"
+            @click="removeImage"
+          >
+            <Icon name="lucide:x" size="14" class="text-white" />
+          </button>
         </div>
         <div class="flex gap-2">
           <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">

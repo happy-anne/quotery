@@ -144,13 +144,23 @@ export const useQuotesStore = defineStore('quotes', () => {
     return data
   }
 
-  async function updateQuote(id: string, form: Partial<QuoteForm>, imageFile?: File): Promise<Quote | null> {
-    let image_url: string | undefined
+  // `removeImage` lets the caller clear an existing photo without replacing
+  // it — passing no imageFile alone is indistinguishable from "no change".
+  async function updateQuote(id: string, form: Partial<QuoteForm>, imageFile?: File, removeImage = false): Promise<Quote | null> {
+    let image_url: string | null | undefined
     if (imageFile) {
       try {
         image_url = await uploadImage(imageFile)
       } catch {
         return null
+      }
+    } else if (removeImage) {
+      image_url = null
+      const oldPath = quotes.value.find(q => q.id === id)?.image_url
+      const path = oldPath ? extractStoragePath(oldPath) : null
+      if (path) {
+        const { error: storageError } = await $supabase.storage.from('quote-images').remove([path])
+        if (storageError) console.error('Failed to remove old quote image:', storageError)
       }
     }
 
@@ -162,7 +172,7 @@ export const useQuotesStore = defineStore('quotes', () => {
     if (form.page !== undefined) updates.page = form.page ? Number(form.page) : null
     if (form.memo !== undefined) updates.memo = form.memo || null
     if (form.category_id !== undefined) updates.category_id = form.category_id || null
-    if (image_url) updates.image_url = image_url
+    if (image_url !== undefined) updates.image_url = image_url
 
     // Everything above is the quote's own content, so it stamps the edit time.
     // Favorite is a separate marker — starring a quote is not an edit and must
