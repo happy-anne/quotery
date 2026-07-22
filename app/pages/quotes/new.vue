@@ -4,7 +4,6 @@ const categoriesStore = useCategoriesStore()
 const router = useRouter()
 
 const form = reactive({
-  title: '',
   content: '',
   source: '',
   author: '',
@@ -156,10 +155,6 @@ async function submit() {
 
       <!-- Extra details, always visible -->
       <div class="flex flex-col gap-4 pt-5 mt-1 border-t" style="border-color: var(--border-subtle);">
-        <div>
-          <label class="block text-caption font-medium text-secondary mb-2">제목</label>
-          <input v-model="form.title" class="input" placeholder="예: 어린 왕자">
-        </div>
         <div>
           <label class="block text-caption font-medium text-secondary mb-2">출처</label>
           <input v-model="form.source" class="input" placeholder="예: 어린 왕자">

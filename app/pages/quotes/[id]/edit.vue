@@ -8,7 +8,6 @@ const categoriesStore = useCategoriesStore()
 
 const quote = ref<Quote | null>(null)
 const form = reactive({
-  title: '',
   content: '',
   source: '',
   author: '',
@@ -28,7 +27,6 @@ onMounted(async () => {
   await categoriesStore.fetchCategories()
   quote.value = await quotesStore.getQuote(route.params.id as string)
   if (quote.value) {
-    form.title = quote.value.title || ''
     form.content = quote.value.content
     form.source = quote.value.source || ''
     form.author = quote.value.author || ''
@@ -52,8 +50,7 @@ function onImageChange(e: Event) {
 const isDirty = computed(() => {
   if (!quote.value) return false
   if (imageFile.value) return true
-  return form.title !== (quote.value.title || '')
-    || form.content !== quote.value.content
+  return form.content !== quote.value.content
     || form.source !== (quote.value.source || '')
     || form.author !== (quote.value.author || '')
     || form.page !== (quote.value.page?.toString() || '')
@@ -134,10 +131,6 @@ async function submit() {
 
       <!-- Extra details -->
       <div class="flex flex-col gap-4 pt-5 mt-1 border-t" style="border-color: var(--border-subtle);">
-        <div>
-          <label class="block text-caption font-medium text-secondary mb-2">제목</label>
-          <input v-model="form.title" class="input" placeholder="예: 어린 왕자">
-        </div>
         <div>
           <label class="block text-caption font-medium text-secondary mb-2">출처</label>
           <input v-model="form.source" class="input" placeholder="예: 어린 왕자">

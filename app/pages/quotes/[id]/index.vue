@@ -15,6 +15,14 @@ onMounted(async () => {
   loading.value = false
 })
 
+// Source, author and page collapse into one labeled line above the memo.
+const sourceLine = computed(() => {
+  if (!quote.value) return ''
+  const parts = [quote.value.source, quote.value.author].filter(Boolean)
+  if (quote.value.page) parts.push(`p.${quote.value.page}`)
+  return parts.join(' · ')
+})
+
 const createdStr = computed(() => quote.value ? formatDateTime(quote.value.created_at) : '')
 
 // Only meaningful once the quote has actually been edited after creation.
@@ -87,29 +95,23 @@ async function share() {
 
       <!-- Quote content -->
       <blockquote class="mb-8">
-        <p class="text-body-lg text-black leading-relaxed mb-4" style="font-size: 1.2rem; line-height: 1.7;">
+        <p class="text-body-lg text-black leading-relaxed" style="font-size: 1.2rem; line-height: 1.7;">
           "{{ quote.content }}"
         </p>
-        <div v-if="quote.source || quote.author" class="text-ui text-muted">
-          <span v-if="quote.source">{{ quote.source }}</span>
-          <span v-if="quote.source && quote.author"> · </span>
-          <span v-if="quote.author">{{ quote.author }}</span>
-          <span v-if="quote.page"> · p.{{ quote.page }}</span>
-        </div>
       </blockquote>
 
       <!-- Image -->
       <div v-if="quote.image_url" class="rounded-2xl overflow-hidden mb-8">
-        <img :src="quote.image_url" :alt="quote.title || ''" class="w-full object-cover">
+        <img :src="quote.image_url" alt="" class="w-full object-cover">
       </div>
 
-      <!-- Title -->
-      <div v-if="quote.title" class="mb-6">
-        <p class="text-caption text-muted mb-1">제목</p>
-        <p class="text-ui font-medium text-black">{{ quote.title }}</p>
+      <!-- Source/author/page, one line, right above the memo -->
+      <div v-if="sourceLine" class="mb-6">
+        <p class="text-caption text-muted mb-1">출처</p>
+        <p class="text-ui text-secondary">{{ sourceLine }}</p>
       </div>
 
-      <!-- Memo — styled like Title above: label + plain text, no card -->
+      <!-- Memo — same label + plain text style, no card -->
       <div v-if="quote.memo" class="mb-6">
         <p class="text-caption text-muted mb-1">메모</p>
         <p class="text-ui text-secondary">{{ quote.memo }}</p>
