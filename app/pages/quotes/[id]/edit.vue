@@ -71,7 +71,10 @@ async function submit() {
   submitting.value = false
   if (updated) {
     allowLeave()
-    router.push(`/quotes/${quote.value.id}`)
+    // This screen was reached by pushing from the detail page, so going back
+    // returns there directly (it remounts and re-reads the now-updated quote)
+    // instead of leaving this submitted form as an extra hop in history.
+    router.back()
   } else {
     errorMsg.value = '저장에 실패했어요. 다시 시도해주세요.'
   }

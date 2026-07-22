@@ -71,7 +71,10 @@ async function submit() {
   submitting.value = false
   if (q) {
     allowLeave()
-    router.push(`/quotes/${q.id}`)
+    // replace, not push: this write form shouldn't linger in history — back
+    // from the detail page should return to wherever this was opened from,
+    // not bounce through the now-submitted form.
+    router.replace(`/quotes/${q.id}`)
   } else {
     errorMsg.value = '저장에 실패했어요. 다시 시도해주세요.'
   }
