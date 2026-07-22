@@ -102,6 +102,12 @@ async function submit() {
     <div class="px-5 pb-12 pt-5">
       <p v-if="errorMsg" class="text-caption text-red-500 mb-4">{{ errorMsg }}</p>
 
+      <!-- Category -->
+      <div class="mb-5">
+        <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
+        <CategoryPicker v-model="form.category_id" />
+      </div>
+
       <!-- Content -->
       <div class="mb-5">
         <label class="block text-caption font-medium text-secondary mb-2">
@@ -145,12 +151,6 @@ async function submit() {
           <div class="w-3 h-3 border border-muted border-t-transparent rounded-full animate-spin" />
           텍스트 추출 중...
         </div>
-      </div>
-
-      <!-- Category -->
-      <div class="mb-5">
-        <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
-        <CategoryPicker v-model="form.category_id" />
       </div>
 
       <!-- Extra details, always visible -->
