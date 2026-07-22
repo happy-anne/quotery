@@ -138,7 +138,15 @@ async function submit() {
           </div>
           <div class="w-24">
             <label class="block text-caption font-medium text-secondary mb-2">페이지</label>
-            <input v-model="form.page" class="input" type="number" placeholder="123" min="1">
+            <input
+              v-model="form.page"
+              class="input"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              placeholder="123"
+              @input="form.page = form.page.replace(/\D/g, '')"
+            >
           </div>
         </div>
         <div>
