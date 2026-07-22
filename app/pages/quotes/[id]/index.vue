@@ -85,23 +85,23 @@ async function share() {
       <!-- Category -->
       <CategoryBadge :category="quote.category" class="mb-6" />
 
-      <!-- Image -->
-      <div v-if="quote.image_url" class="rounded-2xl overflow-hidden mb-8">
-        <img :src="quote.image_url" :alt="quote.title || ''" class="w-full object-cover">
-      </div>
-
       <!-- Quote content -->
       <blockquote class="mb-8">
         <p class="text-body-lg text-black leading-relaxed mb-4" style="font-size: 1.2rem; line-height: 1.7;">
           "{{ quote.content }}"
         </p>
         <div v-if="quote.source || quote.author" class="text-ui text-muted">
-          <span v-if="quote.author">{{ quote.author }}</span>
-          <span v-if="quote.author && quote.source"> · </span>
           <span v-if="quote.source">{{ quote.source }}</span>
+          <span v-if="quote.source && quote.author"> · </span>
+          <span v-if="quote.author">{{ quote.author }}</span>
           <span v-if="quote.page"> · p.{{ quote.page }}</span>
         </div>
       </blockquote>
+
+      <!-- Image -->
+      <div v-if="quote.image_url" class="rounded-2xl overflow-hidden mb-8">
+        <img :src="quote.image_url" :alt="quote.title || ''" class="w-full object-cover">
+      </div>
 
       <!-- Title -->
       <div v-if="quote.title" class="mb-6">
@@ -109,8 +109,8 @@ async function share() {
         <p class="text-ui font-medium text-black">{{ quote.title }}</p>
       </div>
 
-      <!-- Memo -->
-      <div v-if="quote.memo" class="card-stone p-4 rounded-2xl mb-6">
+      <!-- Memo — styled like Title above: label + plain text, no card -->
+      <div v-if="quote.memo" class="mb-6">
         <p class="text-caption text-muted mb-1">메모</p>
         <p class="text-ui text-secondary">{{ quote.memo }}</p>
       </div>

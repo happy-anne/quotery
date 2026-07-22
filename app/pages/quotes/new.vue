@@ -118,6 +118,36 @@ async function submit() {
         />
       </div>
 
+      <!-- Photo — extracts text into 문장 automatically when it is still empty -->
+      <div class="mb-5">
+        <label class="block text-caption font-medium text-secondary mb-2">사진</label>
+        <div v-if="imagePreview" class="relative rounded-2xl overflow-hidden mb-3">
+          <img :src="imagePreview" alt="선택한 사진" class="w-full object-cover max-h-64">
+          <button
+            class="absolute top-2 right-2 w-8 h-8 bg-black/60 rounded-full flex items-center justify-center"
+            @click="removeImage"
+          >
+            <Icon name="lucide:x" size="14" class="text-white" />
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">
+            <Icon name="lucide:camera" size="16" />
+            촬영
+            <input type="file" accept="image/*" capture="environment" class="sr-only" @change="onImageChange">
+          </label>
+          <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">
+            <Icon name="lucide:image-plus" size="16" />
+            {{ imagePreview ? '사진 변경' : '사진 선택' }}
+            <input type="file" accept="image/*" class="sr-only" @change="onImageChange">
+          </label>
+        </div>
+        <div v-if="ocrLoading" class="flex items-center gap-2 mt-3 text-caption text-muted">
+          <div class="w-3 h-3 border border-muted border-t-transparent rounded-full animate-spin" />
+          텍스트 추출 중...
+        </div>
+      </div>
+
       <!-- Category -->
       <div class="mb-5">
         <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
@@ -155,36 +185,6 @@ async function submit() {
         <div>
           <label class="block text-caption font-medium text-secondary mb-2">메모</label>
           <textarea v-model="form.memo" class="input textarea" placeholder="이 문장에 대한 생각을 적어보세요." rows="3" />
-        </div>
-
-        <!-- Photo — extracts text into 글귀 automatically when it is still empty -->
-        <div>
-          <label class="block text-caption font-medium text-secondary mb-2">사진</label>
-          <div v-if="imagePreview" class="relative rounded-2xl overflow-hidden mb-3">
-            <img :src="imagePreview" alt="선택한 사진" class="w-full object-cover max-h-64">
-            <button
-              class="absolute top-2 right-2 w-8 h-8 bg-black/60 rounded-full flex items-center justify-center"
-              @click="removeImage"
-            >
-              <Icon name="lucide:x" size="14" class="text-white" />
-            </button>
-          </div>
-          <div class="flex gap-2">
-            <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">
-              <Icon name="lucide:camera" size="16" />
-              촬영
-              <input type="file" accept="image/*" capture="environment" class="sr-only" @change="onImageChange">
-            </label>
-            <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">
-              <Icon name="lucide:image-plus" size="16" />
-              {{ imagePreview ? '사진 변경' : '사진 선택' }}
-              <input type="file" accept="image/*" class="sr-only" @change="onImageChange">
-            </label>
-          </div>
-          <div v-if="ocrLoading" class="flex items-center gap-2 mt-3 text-caption text-muted">
-            <div class="w-3 h-3 border border-muted border-t-transparent rounded-full animate-spin" />
-            텍스트 추출 중...
-          </div>
         </div>
       </div>
     </div>

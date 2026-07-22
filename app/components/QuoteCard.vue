@@ -10,13 +10,6 @@ const excerpt = computed(() => {
   const c = props.quote.content
   return c.length > 160 ? c.slice(0, 160) + '…' : c
 })
-
-// Title, author, source and page collapse into one supporting line.
-const details = computed(() => {
-  const parts = [props.quote.title, props.quote.author, props.quote.source].filter(Boolean)
-  if (props.quote.page) parts.push(`p.${props.quote.page}`)
-  return parts.join(' · ')
-})
 </script>
 
 <template>
@@ -28,8 +21,8 @@ const details = computed(() => {
           <blockquote class="text-body text-black leading-relaxed">
             "{{ excerpt }}"
           </blockquote>
-          <p v-if="details" class="text-caption text-muted mt-2 truncate">
-            {{ details }}
+          <p v-if="quote.source" class="text-caption text-muted mt-2 truncate">
+            {{ quote.source }}
           </p>
         </div>
         <img

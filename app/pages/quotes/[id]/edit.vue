@@ -107,6 +107,26 @@ async function submit() {
         <textarea v-model="form.content" class="input textarea text-body" rows="5" />
       </div>
 
+      <!-- Photo -->
+      <div class="mb-5">
+        <label class="block text-caption font-medium text-secondary mb-2">사진</label>
+        <div v-if="imagePreview" class="relative rounded-2xl overflow-hidden mb-3">
+          <img :src="imagePreview" alt="첨부된 사진" class="w-full object-cover max-h-64">
+        </div>
+        <div class="flex gap-2">
+          <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">
+            <Icon name="lucide:camera" size="16" />
+            촬영
+            <input type="file" accept="image/*" capture="environment" class="sr-only" @change="onImageChange">
+          </label>
+          <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">
+            <Icon name="lucide:image-plus" size="16" />
+            {{ imagePreview ? '사진 변경' : '사진 선택' }}
+            <input type="file" accept="image/*" class="sr-only" @change="onImageChange">
+          </label>
+        </div>
+      </div>
+
       <div class="mb-5">
         <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
         <CategoryPicker v-model="form.category_id" />
@@ -142,25 +162,6 @@ async function submit() {
         <div>
           <label class="block text-caption font-medium text-secondary mb-2">메모</label>
           <textarea v-model="form.memo" class="input textarea" rows="3" />
-        </div>
-
-        <div>
-          <label class="block text-caption font-medium text-secondary mb-2">사진</label>
-          <div v-if="imagePreview" class="relative rounded-2xl overflow-hidden mb-3">
-            <img :src="imagePreview" alt="첨부된 사진" class="w-full object-cover max-h-64">
-          </div>
-          <div class="flex gap-2">
-            <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">
-              <Icon name="lucide:camera" size="16" />
-              촬영
-              <input type="file" accept="image/*" capture="environment" class="sr-only" @change="onImageChange">
-            </label>
-            <label class="btn btn-white flex-1 py-3 justify-center gap-2 text-caption cursor-pointer">
-              <Icon name="lucide:image-plus" size="16" />
-              {{ imagePreview ? '사진 변경' : '사진 선택' }}
-              <input type="file" accept="image/*" class="sr-only" @change="onImageChange">
-            </label>
-          </div>
         </div>
       </div>
     </div>
