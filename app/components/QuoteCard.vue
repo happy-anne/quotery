@@ -44,7 +44,7 @@ const details = computed(() => {
       <!-- Row 2: category + date, favorite pinned right -->
       <div class="flex items-center gap-2 mt-4">
         <CategoryBadge :category="quote.category" />
-        <span class="text-caption text-muted">{{ dateStr }}</span>
+        <span class="text-caption text-muted-soft">{{ dateStr }}</span>
         <button
           class="ml-auto text-muted hover:text-black transition-colors"
           :aria-label="quote.favorite ? '즐겨찾기 해제' : '즐겨찾기에 추가'"

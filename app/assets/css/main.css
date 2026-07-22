@@ -95,6 +95,9 @@
   --black: #000000;
   --secondary: #4e4e4e;
   --muted: #777169;
+  /* For low-priority metadata (e.g. list timestamps) that should recede
+     further than --muted without disappearing. */
+  --muted-soft: #a8a29a;
   --near-white: #f6f6f6;
   --border: #e5e5e5;
   --border-subtle: rgba(0, 0, 0, 0.05);
@@ -281,6 +284,21 @@ body {
 
 .btn-chip:hover:not(:disabled) {
   background: rgba(0, 0, 0, 0.1);
+}
+
+/* Selected pill. Deliberately sets no padding or font-size: .btn-primary does,
+   and because these rules sit after @tailwind utilities it would beat the
+   px-/py-/text- classes on the chip and make the selected one grow. */
+.btn-chip-selected {
+  background: var(--black);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+}
+
+.btn-chip-selected:hover:not(:disabled) {
+  opacity: 0.85;
 }
 
 /* ── Cards ── */

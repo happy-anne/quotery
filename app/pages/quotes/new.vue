@@ -103,7 +103,7 @@ async function submit() {
       <!-- Content -->
       <div class="mb-5">
         <label class="block text-caption font-medium text-secondary mb-2">
-          글귀 <span class="text-black">*</span>
+          문장 <span class="text-black">*</span>
         </label>
         <textarea
           ref="contentRef"
@@ -122,7 +122,7 @@ async function submit() {
           <button
             v-for="cat in categoriesStore.categories"
             :key="cat.id"
-            :class="['btn text-caption px-3 py-1.5', form.category_id === cat.id ? 'btn-primary' : 'btn-chip']"
+            :class="['btn text-caption px-3 py-1.5', form.category_id === cat.id ? 'btn-chip-selected' : 'btn-chip']"
             style="border-radius: 9999px;"
             @click="form.category_id = form.category_id === cat.id ? '' : cat.id"
           >

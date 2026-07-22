@@ -13,6 +13,7 @@ export default {
         stone: '#f5f2ef',
         secondary: '#4e4e4e',
         muted: '#777169',
+        'muted-soft': '#a8a29a',
         border: '#e5e5e5',
       },
       fontFamily: {
