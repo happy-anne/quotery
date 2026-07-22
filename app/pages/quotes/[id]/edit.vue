@@ -111,6 +111,11 @@ async function submit() {
       <p v-if="errorMsg" class="text-caption text-red-500 mb-4">{{ errorMsg }}</p>
 
       <div class="mb-6">
+        <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
+        <CategoryPicker v-model="form.category_id" />
+      </div>
+
+      <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">문장 *</label>
         <textarea v-model="form.content" class="input textarea text-body" rows="5" />
       </div>
@@ -139,11 +144,6 @@ async function submit() {
             <input type="file" accept="image/*" class="sr-only" @change="onImageChange">
           </label>
         </div>
-      </div>
-
-      <div class="mb-6">
-        <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
-        <CategoryPicker v-model="form.category_id" />
       </div>
 
       <!-- Extra details -->

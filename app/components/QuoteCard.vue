@@ -56,6 +56,12 @@ const excerpt = computed(() => {
 </template>
 
 <style scoped>
+/* Overrides the global .card radius (24px, shared with settings sections and
+   modal sheets) for list items specifically — scoped so nothing else moves. */
+.card {
+  border-radius: 12px;
+}
+
 .quote-thumb {
   flex-shrink: 0;
   width: 72px;
