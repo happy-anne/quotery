@@ -48,11 +48,20 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Slides the idle window forward. Only meaningful once already unlocked —
-  // calling this before the PIN is entered must not grant access.
+  // calling this before the PIN is entered must not grant access. If the
+  // window already expired (e.g. the app sat backgrounded past 15 minutes),
+  // this must not resurrect it — a mere foreground/visibility event isn't
+  // real activity and should not silently re-extend a lapsed session.
   function recordActivity() {
-    if (localStorage.getItem('quotery_pin_verified_at')) {
-      localStorage.setItem('quotery_pin_verified_at', String(Date.now()))
+    const raw = localStorage.getItem('quotery_pin_verified_at')
+    if (!raw) return
+    const verifiedAt = Number(raw)
+    if (Number.isNaN(verifiedAt) || Date.now() - verifiedAt >= PIN_IDLE_MS) {
+      isPinVerified.value = false
+      localStorage.removeItem('quotery_pin_verified_at')
+      return
     }
+    localStorage.setItem('quotery_pin_verified_at', String(Date.now()))
   }
 
   // Marks the start of a 30-day login window. Only a genuine sign-in should
