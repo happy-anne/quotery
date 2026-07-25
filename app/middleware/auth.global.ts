@@ -4,6 +4,24 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const publicRoutes = ['/', '/login', '/auth/callback']
   const pinRoutes = ['/pin', '/pin-setup', '/biometric']
 
+  // The PWA's start_url is '/', so reopening it from the home screen icon
+  // always lands here first — an already-logged-in user must be carried
+  // straight past the welcome screen instead of seeing it every time.
+  if (to.path === '/') {
+    if (!authStore.isAuthenticated) return
+
+    if (authStore.isSessionExpired()) {
+      const { $supabase } = useNuxtApp()
+      await $supabase.auth.signOut()
+      authStore.signOut()
+      return
+    }
+
+    if (!authStore.hasPin()) return navigateTo('/pin-setup')
+    if (!authStore.isPinVerified && !authStore.checkSessionVerified()) return navigateTo('/pin')
+    return navigateTo('/home')
+  }
+
   if (publicRoutes.includes(to.path)) return
 
   if (!authStore.isAuthenticated) {
