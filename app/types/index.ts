@@ -26,6 +26,7 @@ export interface Quote {
   category_id?: string
   category?: Category
   image_url?: string
+  url?: string
   favorite: boolean
   created_at: string
   updated_at: string
@@ -41,6 +42,7 @@ export interface QuoteForm {
   page: string
   memo: string
   category_id: string
+  url: string
   favorite: boolean
 }
 

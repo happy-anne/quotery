@@ -10,6 +10,7 @@ const form = reactive({
   page: '',
   memo: '',
   category_id: '',
+  url: '',
   favorite: false,
 })
 
@@ -180,6 +181,10 @@ async function submit() {
         <div class="mb-6">
           <label class="block text-caption font-medium text-secondary mb-2">메모</label>
           <textarea v-model="form.memo" class="input textarea" placeholder="이 문장에 대한 생각을 적어보세요." rows="3" />
+        </div>
+        <div class="mb-6">
+          <label class="block text-caption font-medium text-secondary mb-2">바로가기 URL</label>
+          <input v-model="form.url" class="input" type="url" placeholder="https://...">
         </div>
       </div>
     </div>

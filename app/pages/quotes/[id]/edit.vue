@@ -14,6 +14,7 @@ const form = reactive({
   page: '',
   memo: '',
   category_id: '',
+  url: '',
   // Toggled from the quote detail view, not this form — carried through so
   // saving an edit doesn't clear it.
   favorite: false,
@@ -37,6 +38,7 @@ onMounted(async () => {
     form.page = quote.value.page?.toString() || ''
     form.memo = quote.value.memo || ''
     form.category_id = quote.value.category_id || ''
+    form.url = quote.value.url || ''
     form.favorite = quote.value.favorite
     imagePreview.value = quote.value.image_url || null
   }
@@ -67,6 +69,7 @@ const isDirty = computed(() => {
     || form.page !== (quote.value.page?.toString() || '')
     || form.memo !== (quote.value.memo || '')
     || form.category_id !== (quote.value.category_id || '')
+    || form.url !== (quote.value.url || '')
 })
 
 const { showConfirm, confirmLeave, cancelLeave, allowLeave } = useUnsavedGuard(isDirty)
@@ -172,6 +175,10 @@ async function submit() {
         <div class="mb-6">
           <label class="block text-caption font-medium text-secondary mb-2">메모</label>
           <textarea v-model="form.memo" class="input textarea" rows="3" />
+        </div>
+        <div class="mb-6">
+          <label class="block text-caption font-medium text-secondary mb-2">바로가기 URL</label>
+          <input v-model="form.url" class="input" type="url" placeholder="https://...">
         </div>
       </div>
     </div>

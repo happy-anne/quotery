@@ -27,10 +27,14 @@ create table if not exists quotes (
   memo text,
   category_id uuid references categories(id) on delete set null,
   image_url text,
+  url text,
   favorite boolean default false not null,
   created_at timestamptz default now() not null,
   updated_at timestamptz default now() not null
 );
+
+-- For databases created before url existed:
+alter table quotes add column if not exists url text;
 
 alter table quotes enable row level security;
 create policy "Users manage own quotes" on quotes

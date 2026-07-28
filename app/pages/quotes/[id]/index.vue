@@ -117,6 +117,12 @@ async function share() {
         <p class="text-ui text-secondary">{{ quote.memo }}</p>
       </div>
 
+      <!-- Shortcut URL -->
+      <div v-if="quote.url" class="mb-6">
+        <p class="text-caption text-muted mb-1">바로가기 URL</p>
+        <a :href="quote.url" target="_blank" rel="noopener noreferrer" class="text-ui text-secondary break-all underline">{{ quote.url }}</a>
+      </div>
+
       <!-- Meta -->
       <div class="border-t pt-6 flex flex-col gap-1" style="border-color: var(--border);">
         <p class="text-caption text-muted">

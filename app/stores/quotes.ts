@@ -129,6 +129,7 @@ export const useQuotesStore = defineStore('quotes', () => {
         page: form.page ? Number(form.page) : null,
         memo: form.memo || null,
         category_id: form.category_id || null,
+        url: form.url || null,
         favorite: form.favorite,
         image_url: image_url || null,
       })
@@ -172,6 +173,7 @@ export const useQuotesStore = defineStore('quotes', () => {
     if (form.page !== undefined) updates.page = form.page ? Number(form.page) : null
     if (form.memo !== undefined) updates.memo = form.memo || null
     if (form.category_id !== undefined) updates.category_id = form.category_id || null
+    if (form.url !== undefined) updates.url = form.url || null
     if (image_url !== undefined) updates.image_url = image_url
 
     // Everything above is the quote's own content, so it stamps the edit time.
