@@ -7,7 +7,7 @@ const emit = defineEmits<{ favorite: [id: string] }>()
 const dateStr = computed(() => formatDateTime(props.quote.created_at))
 
 const excerpt = computed(() => {
-  const c = props.quote.content
+  const c = stripHtml(props.quote.content)
   return c.length > 160 ? c.slice(0, 160) + '…' : c
 })
 </script>

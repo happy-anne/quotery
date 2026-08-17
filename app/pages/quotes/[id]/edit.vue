@@ -120,7 +120,7 @@ async function submit() {
 
       <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">문장 *</label>
-        <textarea v-model="form.content" class="input textarea text-body" rows="5" />
+        <RichTextInput v-model="form.content" :rows="5" />
       </div>
 
       <!-- Photo -->

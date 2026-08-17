@@ -38,7 +38,7 @@ export const useQuotesStore = defineStore('quotes', () => {
     if (filter.value.search) {
       const q = filter.value.search.toLowerCase()
       list = list.filter(item =>
-        item.content.toLowerCase().includes(q)
+        stripHtml(item.content).toLowerCase().includes(q)
         || item.title?.toLowerCase().includes(q)
         || item.source?.toLowerCase().includes(q)
         || item.author?.toLowerCase().includes(q),
@@ -123,7 +123,7 @@ export const useQuotesStore = defineStore('quotes', () => {
       .insert({
         user_id: user?.id,
         title: form.title || null,
-        content: form.content,
+        content: sanitizeQuoteHtml(form.content),
         source: form.source || null,
         author: form.author || null,
         page: form.page ? Number(form.page) : null,
@@ -167,7 +167,7 @@ export const useQuotesStore = defineStore('quotes', () => {
 
     const updates: Record<string, unknown> = {}
     if (form.title !== undefined) updates.title = form.title || null
-    if (form.content !== undefined) updates.content = form.content
+    if (form.content !== undefined) updates.content = sanitizeQuoteHtml(form.content)
     if (form.source !== undefined) updates.source = form.source || null
     if (form.author !== undefined) updates.author = form.author || null
     if (form.page !== undefined) updates.page = form.page ? Number(form.page) : null

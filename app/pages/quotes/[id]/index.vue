@@ -9,11 +9,18 @@ const quote = ref<Quote | null>(null)
 const loading = ref(true)
 const showDeleteConfirm = ref(false)
 const deleting = ref(false)
+const showImageZoom = ref(false)
 
 onMounted(async () => {
   quote.value = await quotesStore.getQuote(route.params.id as string)
   loading.value = false
 })
+
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') showImageZoom.value = false
+}
+onMounted(() => window.addEventListener('keydown', onKeydown))
+onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 
 // Source, author and page collapse into one labeled line above the memo.
 const sourceLine = computed(() => {
@@ -22,6 +29,8 @@ const sourceLine = computed(() => {
   if (quote.value.page) parts.push(`p.${quote.value.page}`)
   return parts.join(' · ')
 })
+
+const contentHtml = computed(() => quote.value ? sanitizeQuoteHtml(quote.value.content) : '')
 
 const createdStr = computed(() => quote.value ? formatDateTime(quote.value.created_at) : '')
 
@@ -47,7 +56,7 @@ async function deleteQuote() {
 
 async function share() {
   if (!quote.value) return
-  const text = `"${quote.value.content}"${quote.value.source ? `\n— ${quote.value.source}` : ''}`
+  const text = `"${stripHtml(quote.value.content)}"${quote.value.source ? `\n— ${quote.value.source}` : ''}`
   if (navigator.share) {
     await navigator.share({ text })
   } else {
@@ -96,12 +105,16 @@ async function share() {
       <!-- Quote content -->
       <blockquote class="mb-6">
         <p class="text-body-lg text-black leading-relaxed" style="font-size: 1.2rem; line-height: 1.7;">
-          "{{ quote.content }}"
+          "<span v-html="contentHtml" />"
         </p>
       </blockquote>
 
       <!-- Image -->
-      <div v-if="quote.image_url" class="rounded-[8px] overflow-hidden mb-6">
+      <div
+        v-if="quote.image_url"
+        class="rounded-[8px] overflow-hidden mb-6 cursor-zoom-in"
+        @click="showImageZoom = true"
+      >
         <img :src="quote.image_url" alt="" class="w-full object-cover">
       </div>
 
@@ -158,5 +171,52 @@ async function share() {
         </div>
       </div>
     </Transition>
+
+    <!-- Image zoom lightbox -->
+    <Transition name="fade" :duration="200">
+      <div
+        v-if="showImageZoom && quote?.image_url"
+        class="image-lightbox"
+        @click="showImageZoom = false"
+      >
+        <button class="btn btn-ghost p-2 rounded-xl image-lightbox-close" @click.stop="showImageZoom = false">
+          <Icon name="lucide:x" size="22" class="text-white" />
+        </button>
+        <img :src="quote.image_url" alt="" class="image-lightbox-img" @click.stop>
+      </div>
+    </Transition>
   </div>
 </template>
+
+<style scoped>
+blockquote :deep(mark.quote-highlight) {
+  background: #fff3a3;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.92);
+  padding: 24px;
+}
+
+.image-lightbox-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.image-lightbox-close {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: 16px;
+  z-index: 61;
+}
+</style>

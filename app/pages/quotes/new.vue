@@ -16,7 +16,7 @@ const form = reactive({
 
 const imageFile = ref<File | null>(null)
 const imagePreview = ref<string | null>(null)
-const contentRef = ref<HTMLTextAreaElement | null>(null)
+const contentRef = ref<{ focus: () => void } | null>(null)
 const submitting = ref(false)
 const ocrLoading = ref(false)
 const errorMsg = ref('')
@@ -114,12 +114,11 @@ async function submit() {
         <label class="block text-caption font-medium text-secondary mb-2">
           문장 <span class="text-black">*</span>
         </label>
-        <textarea
+        <RichTextInput
           ref="contentRef"
           v-model="form.content"
-          class="input textarea text-body"
           placeholder='"마음을 움직인 문장을 입력하세요."'
-          rows="5"
+          :rows="5"
           autofocus
         />
       </div>
