@@ -18,6 +18,9 @@ const excerpt = computed(() => {
       <!-- Row 1: quote + supporting text, thumbnail on the right -->
       <div class="flex gap-4">
         <div class="flex-1 min-w-0">
+          <p v-if="quote.title" class="text-body font-medium text-black mb-1 truncate">
+            {{ quote.title }}
+          </p>
           <blockquote class="text-body text-black leading-relaxed">
             "{{ excerpt }}"
           </blockquote>

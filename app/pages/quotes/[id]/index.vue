@@ -102,6 +102,11 @@ async function share() {
       <!-- Category -->
       <CategoryBadge :category="quote.category" class="mb-6" />
 
+      <!-- Title -->
+      <h2 v-if="quote.title" class="text-section text-black mb-3" style="font-weight: 500;">
+        {{ quote.title }}
+      </h2>
+
       <!-- Quote content -->
       <blockquote class="mb-6">
         <p class="text-body-lg text-black leading-relaxed" style="font-size: 1.2rem; line-height: 1.7;">

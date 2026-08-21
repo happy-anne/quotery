@@ -8,6 +8,7 @@ const categoriesStore = useCategoriesStore()
 
 const quote = ref<Quote | null>(null)
 const form = reactive({
+  title: '',
   content: '',
   source: '',
   author: '',
@@ -32,6 +33,7 @@ onMounted(async () => {
   await categoriesStore.fetchCategories()
   quote.value = await quotesStore.getQuote(route.params.id as string)
   if (quote.value) {
+    form.title = quote.value.title || ''
     form.content = quote.value.content
     form.source = quote.value.source || ''
     form.author = quote.value.author || ''
@@ -63,7 +65,8 @@ function removeImage() {
 const isDirty = computed(() => {
   if (!quote.value) return false
   if (imageFile.value || removePhoto.value) return true
-  return form.content !== quote.value.content
+  return form.title !== (quote.value.title || '')
+    || form.content !== quote.value.content
     || form.source !== (quote.value.source || '')
     || form.author !== (quote.value.author || '')
     || form.page !== (quote.value.page?.toString() || '')
@@ -116,6 +119,11 @@ async function submit() {
       <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
         <CategoryPicker v-model="form.category_id" />
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-caption font-medium text-secondary mb-2">제목</label>
+        <input v-model="form.title" class="input" placeholder="제목을 입력하세요 (선택)">
       </div>
 
       <div class="mb-6">

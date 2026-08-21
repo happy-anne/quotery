@@ -33,8 +33,7 @@ export interface Quote {
 }
 
 export interface QuoteForm {
-  // Optional: the write/edit screens no longer expose a title field, but
-  // existing rows may still carry one from before this change.
+  // Optional: title is not a required field on the write/edit screens.
   title?: string
   content: string
   source: string

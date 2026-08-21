@@ -4,6 +4,7 @@ const categoriesStore = useCategoriesStore()
 const router = useRouter()
 
 const form = reactive({
+  title: '',
   content: '',
   source: '',
   author: '',
@@ -107,6 +108,12 @@ async function submit() {
       <div class="mb-6">
         <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
         <CategoryPicker v-model="form.category_id" />
+      </div>
+
+      <!-- Title -->
+      <div class="mb-6">
+        <label class="block text-caption font-medium text-secondary mb-2">제목</label>
+        <input v-model="form.title" class="input" placeholder="제목을 입력하세요 (선택)">
       </div>
 
       <!-- Content -->
