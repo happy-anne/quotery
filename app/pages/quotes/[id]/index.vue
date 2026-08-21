@@ -103,14 +103,14 @@ async function share() {
       <CategoryBadge :category="quote.category" class="mb-6" />
 
       <!-- Title -->
-      <h2 v-if="quote.title" class="text-section text-black mb-3" style="font-weight: 500;">
+      <h2 v-if="quote.title" class="text-section mb-3" style="font-weight: 500; color: #924e10;">
         {{ quote.title }}
       </h2>
 
       <!-- Quote content -->
       <blockquote class="mb-6">
         <p class="text-body-lg text-black leading-relaxed" style="font-size: 1.2rem; line-height: 1.7;">
-          "<span v-html="contentHtml" />"
+          <span v-html="contentHtml" />
         </p>
       </blockquote>
 
@@ -137,8 +137,8 @@ async function share() {
 
       <!-- Shortcut URL -->
       <div v-if="quote.url" class="mb-6">
-        <p class="text-caption text-muted mb-1">바로가기 URL</p>
-        <a :href="quote.url" target="_blank" rel="noopener noreferrer" class="text-ui text-secondary break-all underline">{{ quote.url }}</a>
+        <p class="text-caption text-muted mb-1">URL</p>
+        <a :href="quote.url" target="_blank" rel="noopener noreferrer" class="text-ui break-all hover:underline" style="color: #8f694d;">{{ quote.url }}</a>
       </div>
 
       <!-- Meta -->
