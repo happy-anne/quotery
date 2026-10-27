@@ -27,6 +27,17 @@ async function createCategory() {
   creating.value = false
 }
 
+const pendingDelete = ref<Category | null>(null)
+const deleting = ref(false)
+
+async function confirmDelete() {
+  if (!pendingDelete.value) return
+  deleting.value = true
+  await categoriesStore.deleteCategory(pendingDelete.value.id)
+  deleting.value = false
+  pendingDelete.value = null
+}
+
 const editingId = ref<string | null>(null)
 const editName = ref('')
 
@@ -179,7 +190,7 @@ async function onPointerUp() {
             <button
               class="btn btn-ghost p-2 rounded-xl text-muted"
               :aria-label="`${cat.name} 삭제`"
-              @click="categoriesStore.deleteCategory(cat.id)"
+              @click="pendingDelete = cat"
             >
               <Icon name="lucide:x" size="16" />
             </button>
@@ -190,6 +201,16 @@ async function onPointerUp() {
         </p>
       </div>
     </main>
+
+    <ConfirmDialog
+      :open="!!pendingDelete"
+      :title="`'${pendingDelete?.name ?? ''}' 카테고리를 삭제할까요?`"
+      message="이 카테고리의 문장은 지워지지 않고 카테고리만 해제돼요. 삭제한 카테고리는 되돌릴 수 없습니다."
+      :confirm-text="deleting ? '삭제 중...' : '삭제하기'"
+      destructive
+      @confirm="confirmDelete"
+      @cancel="pendingDelete = null"
+    />
   </div>
 </template>
 

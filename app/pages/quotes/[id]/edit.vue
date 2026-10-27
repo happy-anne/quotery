@@ -54,7 +54,10 @@ function onImageChange(e: Event) {
   removePhoto.value = false
 }
 
+const showRemovePhotoConfirm = ref(false)
+
 function removeImage() {
+  showRemovePhotoConfirm.value = false
   imageFile.value = null
   imagePreview.value = null
   removePhoto.value = true
@@ -138,7 +141,8 @@ async function submit() {
           <img :src="imagePreview" alt="첨부된 사진" class="w-full object-cover max-h-64">
           <button
             class="absolute top-2 right-2 w-8 h-8 bg-black/60 rounded-full flex items-center justify-center"
-            @click="removeImage"
+            aria-label="사진 삭제"
+            @click="showRemovePhotoConfirm = true"
           >
             <Icon name="lucide:x" size="14" class="text-white" />
           </button>
@@ -199,6 +203,16 @@ async function submit() {
       cancel-text="계속 작성"
       @confirm="confirmLeave"
       @cancel="cancelLeave"
+    />
+
+    <ConfirmDialog
+      :open="showRemovePhotoConfirm"
+      title="사진을 삭제할까요?"
+      message="저장하면 이 사진은 영구적으로 삭제됩니다."
+      confirm-text="삭제하기"
+      destructive
+      @confirm="removeImage"
+      @cancel="showRemovePhotoConfirm = false"
     />
   </div>
 </template>
