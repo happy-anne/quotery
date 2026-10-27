@@ -45,7 +45,9 @@ export const useQuotesStore = defineStore('quotes', () => {
       )
     }
 
-    if (filter.value.category_id) {
+    if (filter.value.category_id === UNCATEGORIZED_ID) {
+      list = list.filter(item => !item.category_id)
+    } else if (filter.value.category_id) {
       list = list.filter(item => item.category_id === filter.value.category_id)
     }
 

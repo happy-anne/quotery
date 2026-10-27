@@ -106,7 +106,7 @@ async function submit() {
 
       <!-- Category -->
       <div class="mb-6">
-        <label class="block text-caption font-medium text-secondary mb-2">카테고리</label>
+        <label class="block text-caption font-medium text-secondary mb-2">카테고리 *</label>
         <CategoryPicker v-model="form.category_id" />
       </div>
 

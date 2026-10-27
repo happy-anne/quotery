@@ -7,6 +7,8 @@ const categoriesStore = useCategoriesStore()
 const showSortMenu = ref(false)
 const sortMenuRef = ref<HTMLElement | null>(null)
 const selectedCategoryId = ref<string | undefined>()
+const uncategorized = UNCATEGORIZED_ID
+const uncategorizedLabel = UNCATEGORIZED_NAME
 
 const sortLabels: Record<SortOption, string> = {
   newest: '최신순',
@@ -65,6 +67,13 @@ function onFavorite(id: string) {
             @click="setCategory(cat.id)"
           >
             {{ cat.name }}
+          </button>
+          <button
+            :class="['btn text-caption px-3 py-1.5', selectedCategoryId === uncategorized ? 'btn-chip-selected' : 'btn-chip']"
+            style="border-radius: 9999px;"
+            @click="setCategory(uncategorized)"
+          >
+            {{ uncategorizedLabel }}
           </button>
         </div>
       </div>

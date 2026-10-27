@@ -11,8 +11,28 @@ const dragIndex = ref<number | null>(null)
 const listRef = ref<HTMLElement | null>(null)
 const saveError = ref('')
 
+const quotesStore = useQuotesStore()
+
+// Counts come from the quotes cache, so it is loaded here as well.
 onMounted(async () => {
-  await categoriesStore.fetchCategories()
+  await Promise.all([
+    categoriesStore.fetchCategories(),
+    quotesStore.fetchQuotes(),
+  ])
+})
+
+function countOf(id: string) {
+  return categoriesStore.quoteCounts[id] ?? 0
+}
+
+const uncategorizedCount = computed(() => countOf(UNCATEGORIZED_ID))
+
+const deleteMessage = computed(() => {
+  const n = pendingDelete.value ? countOf(pendingDelete.value.id) : 0
+  const moved = n
+    ? `이 카테고리의 문장 ${n}개는 '${UNCATEGORIZED_NAME}'로 옮겨져요.`
+    : '이 카테고리에는 문장이 없어요.'
+  return `${moved} 삭제한 카테고리는 되돌릴 수 없습니다.`
 })
 
 watch(() => categoriesStore.categories, (list) => {
@@ -21,6 +41,11 @@ watch(() => categoriesStore.categories, (list) => {
 
 async function createCategory() {
   if (!newName.value.trim()) return
+  if (newName.value.trim() === UNCATEGORIZED_NAME) {
+    saveError.value = `'${UNCATEGORIZED_NAME}'는 기본 카테고리라 따로 만들 수 없어요.`
+    return
+  }
+  saveError.value = ''
   creating.value = true
   await categoriesStore.createCategory(newName.value.trim())
   newName.value = ''
@@ -33,9 +58,10 @@ const deleting = ref(false)
 async function confirmDelete() {
   if (!pendingDelete.value) return
   deleting.value = true
-  await categoriesStore.deleteCategory(pendingDelete.value.id)
+  const ok = await categoriesStore.deleteCategory(pendingDelete.value.id)
   deleting.value = false
   pendingDelete.value = null
+  saveError.value = ok ? '' : '카테고리를 삭제하지 못했어요. 다시 시도해주세요.'
 }
 
 const editingId = ref<string | null>(null)
@@ -61,6 +87,10 @@ async function saveEdit() {
   const name = editName.value.trim()
   const current = categoriesStore.getCategoryById(id)
   if (!name || name === current?.name) return
+  if (name === UNCATEGORIZED_NAME) {
+    saveError.value = `'${UNCATEGORIZED_NAME}'는 기본 카테고리 이름이라 쓸 수 없어요.`
+    return
+  }
   const { ok, message } = await categoriesStore.renameCategory(id, name)
   if (!ok) saveError.value = message
 }
@@ -147,6 +177,16 @@ async function onPointerUp() {
       </p>
       <p v-if="saveError" class="text-caption text-red-500 mb-4 px-1">{{ saveError }}</p>
 
+      <!-- Built-in 미분류: always first, can't be moved, renamed or deleted.
+           Kept outside listRef so the drag hit-test only sees real rows. -->
+      <div class="flex items-center gap-3 p-4 card mb-2">
+        <Icon name="lucide:inbox" size="18" class="text-muted" />
+        <span class="text-ui text-black truncate">
+          {{ UNCATEGORIZED_NAME }} <span class="quote-count">{{ uncategorizedCount }}</span>
+        </span>
+        <span class="text-caption text-muted ml-auto shrink-0">기본</span>
+      </div>
+
       <!-- Category list -->
       <div ref="listRef" class="flex flex-col gap-2">
         <div
@@ -176,7 +216,9 @@ async function onPointerUp() {
               @keyup.esc="cancelEdit"
               @blur="saveEdit"
             >
-            <span v-else class="text-ui text-black truncate">{{ cat.name }}</span>
+            <span v-else class="text-ui text-black truncate">
+              {{ cat.name }} <span class="quote-count">{{ countOf(cat.id) }}</span>
+            </span>
           </div>
           <div class="flex items-center shrink-0">
             <button
@@ -197,7 +239,7 @@ async function onPointerUp() {
           </div>
         </div>
         <p v-if="!items.length" class="text-ui text-muted text-center py-8">
-          카테고리가 없어요. 추가해보세요!
+          직접 만든 카테고리가 없어요. 추가해보세요!
         </p>
       </div>
     </main>
@@ -205,7 +247,7 @@ async function onPointerUp() {
     <ConfirmDialog
       :open="!!pendingDelete"
       :title="`'${pendingDelete?.name ?? ''}' 카테고리를 삭제할까요?`"
-      message="이 카테고리의 문장은 지워지지 않고 카테고리만 해제돼요. 삭제한 카테고리는 되돌릴 수 없습니다."
+      :message="deleteMessage"
       :confirm-text="deleting ? '삭제 중...' : '삭제하기'"
       destructive
       @confirm="confirmDelete"
@@ -215,6 +257,11 @@ async function onPointerUp() {
 </template>
 
 <style scoped>
+.quote-count {
+  font-size: 0.875em;
+  color: rgba(0, 0, 0, 0.5);
+}
+
 /* Keep the drag gesture from scrolling the page on touch devices. */
 .drag-handle {
   touch-action: none;

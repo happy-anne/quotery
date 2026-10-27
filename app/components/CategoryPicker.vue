@@ -24,13 +24,20 @@ function cancelAdd() {
   errorMsg.value = ''
 }
 
+// A category is required, so selecting never toggles off; '' is 미분류.
 function select(id: string) {
-  model.value = model.value === id ? '' : id
+  model.value = id
 }
 
 async function submitAdd() {
   const name = draft.value.trim()
   if (!name || saving.value) return
+
+  if (name === UNCATEGORIZED_NAME) {
+    model.value = ''
+    cancelAdd()
+    return
+  }
 
   // Reuse an existing category instead of creating a duplicate name.
   const existing = categoriesStore.categories.find(c => c.name === name)
@@ -58,6 +65,13 @@ async function submitAdd() {
 <template>
   <div>
     <div class="flex flex-wrap items-center gap-2">
+      <button
+        :class="['btn text-caption px-3 py-1.5', !model ? 'btn-chip-selected' : 'btn-chip']"
+        style="border-radius: 9999px;"
+        @click="select('')"
+      >
+        {{ UNCATEGORIZED_NAME }}
+      </button>
       <button
         v-for="cat in categoriesStore.categories"
         :key="cat.id"

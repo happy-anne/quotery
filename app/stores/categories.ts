@@ -110,10 +110,33 @@ export const useCategoriesStore = defineStore('categories', () => {
     return { ok: true, message: '' }
   }
 
+  // The database moves the category's quotes to 미분류 (on delete set null);
+  // the cached quotes are updated the same way so counts and badges match.
   async function deleteCategory(id: string) {
-    await $supabase.from('categories').delete().eq('id', id)
+    const { error } = await $supabase.from('categories').delete().eq('id', id)
+    if (error) {
+      console.error('Failed to delete category:', error)
+      return false
+    }
     categories.value = categories.value.filter(c => c.id !== id)
+    for (const q of useQuotesStore().quotes) {
+      if (q.category_id === id) {
+        q.category_id = undefined
+        q.category = undefined
+      }
+    }
+    return true
   }
+
+  // Keyed by category id, with 미분류 under UNCATEGORIZED_ID.
+  const quoteCounts = computed(() => {
+    const counts: Record<string, number> = {}
+    for (const q of useQuotesStore().quotes) {
+      const key = q.category_id || UNCATEGORIZED_ID
+      counts[key] = (counts[key] ?? 0) + 1
+    }
+    return counts
+  })
 
   async function deleteAllUserData(): Promise<boolean> {
     const { data: { user } } = await $supabase.auth.getUser()
@@ -134,6 +157,7 @@ export const useCategoriesStore = defineStore('categories', () => {
   return {
     categories,
     loading,
+    quoteCounts,
     fetchCategories,
     createCategory,
     renameCategory,
