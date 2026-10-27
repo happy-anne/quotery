@@ -85,6 +85,31 @@ export const useCategoriesStore = defineStore('categories', () => {
     return { ok: true, message: '' }
   }
 
+  // Quotes keep their own joined copy of the category, so those are renamed in
+  // place too; otherwise the list would show the old name until the next fetch.
+  async function renameCategory(id: string, name: string) {
+    const { data, error } = await $supabase
+      .from('categories')
+      .update({ name })
+      .eq('id', id)
+      .select('id')
+
+    if (error) {
+      console.error('Failed to rename category:', error)
+      return { ok: false, message: `이름 변경 실패: ${error.message}` }
+    }
+    if (!data?.length) {
+      return { ok: false, message: '이름이 변경되지 않았어요. 권한을 확인해주세요.' }
+    }
+
+    const cat = categories.value.find(c => c.id === id)
+    if (cat) cat.name = name
+    for (const q of useQuotesStore().quotes) {
+      if (q.category?.id === id) q.category.name = name
+    }
+    return { ok: true, message: '' }
+  }
+
   async function deleteCategory(id: string) {
     await $supabase.from('categories').delete().eq('id', id)
     categories.value = categories.value.filter(c => c.id !== id)
@@ -111,6 +136,7 @@ export const useCategoriesStore = defineStore('categories', () => {
     loading,
     fetchCategories,
     createCategory,
+    renameCategory,
     deleteCategory,
     deleteAllUserData,
     reorderCategories,

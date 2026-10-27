@@ -27,6 +27,33 @@ async function createCategory() {
   creating.value = false
 }
 
+const editingId = ref<string | null>(null)
+const editName = ref('')
+
+function startEdit(cat: Category) {
+  editingId.value = cat.id
+  editName.value = cat.name
+  saveError.value = ''
+  nextTick(() => document.querySelector<HTMLInputElement>('.rename-input')?.focus())
+}
+
+function cancelEdit() {
+  editingId.value = null
+}
+
+// Runs on both Enter and blur; clearing editingId first keeps the blur that
+// follows Enter from saving a second time.
+async function saveEdit() {
+  const id = editingId.value
+  if (!id) return
+  editingId.value = null
+  const name = editName.value.trim()
+  const current = categoriesStore.getCategoryById(id)
+  if (!name || name === current?.name) return
+  const { ok, message } = await categoriesStore.renameCategory(id, name)
+  if (!ok) saveError.value = message
+}
+
 // The drag ends on the window, not on the handle: reordering moves the handle's
 // row under the cursor, so the pointer is usually over a different row by the
 // time it is released and the handle would never see the pointerup.
@@ -116,26 +143,47 @@ async function onPointerUp() {
           :key="cat.id"
           :class="['flex items-center justify-between p-4 card transition-shadow', dragIndex === i ? 'is-dragging' : '']"
         >
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 flex-1 min-w-0">
             <button
               class="drag-handle btn btn-ghost p-1 -ml-1 text-muted cursor-grab"
               :aria-label="`${cat.name} 순서 변경`"
+              :disabled="editingId === cat.id"
               @pointerdown="onPointerDown(i, $event)"
             >
               <Icon name="lucide:grip-vertical" size="18" />
             </button>
             <span
-              class="w-3 h-3 rounded-full"
+              class="w-3 h-3 rounded-full shrink-0"
               :style="{ backgroundColor: cat.color }"
             />
-            <span class="text-ui text-black">{{ cat.name }}</span>
+            <input
+              v-if="editingId === cat.id"
+              v-model="editName"
+              class="rename-input input flex-1 min-w-0 py-1"
+              :aria-label="`${cat.name} 새 이름`"
+              @keyup.enter="saveEdit"
+              @keyup.esc="cancelEdit"
+              @blur="saveEdit"
+            >
+            <span v-else class="text-ui text-black truncate">{{ cat.name }}</span>
           </div>
-          <button
-            class="btn btn-ghost p-2 rounded-xl text-muted"
-            @click="categoriesStore.deleteCategory(cat.id)"
-          >
-            <Icon name="lucide:x" size="16" />
-          </button>
+          <div class="flex items-center shrink-0">
+            <button
+              v-if="editingId !== cat.id"
+              class="btn btn-ghost p-2 rounded-xl text-muted"
+              :aria-label="`${cat.name} 이름 수정`"
+              @click="startEdit(cat)"
+            >
+              <Icon name="lucide:pencil" size="16" />
+            </button>
+            <button
+              class="btn btn-ghost p-2 rounded-xl text-muted"
+              :aria-label="`${cat.name} 삭제`"
+              @click="categoriesStore.deleteCategory(cat.id)"
+            >
+              <Icon name="lucide:x" size="16" />
+            </button>
+          </div>
         </div>
         <p v-if="!items.length" class="text-ui text-muted text-center py-8">
           카테고리가 없어요. 추가해보세요!
